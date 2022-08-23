@@ -4,23 +4,23 @@
 Put or write the user story here. Add any clarifying notes you might have.
 
     As a user
-    So that I can record my experiences
+    So that I can record my experiences (add) - DONE
     I want to keep a regular diary < this would be the main object
 
     As a user
-    So that I can reflect on my experiences
+    So that I can reflect on my experiences (list?) - DONE
     I want to read my past diary entries < diary entries << get the content
 
     As a user
-    So that I can reflect on my experiences in my busy day
+    So that I can reflect on my experiences in my busy day (suggestion(time)) - DONE
     I want to select diary entries to read based on how much time I have and my reading speed
 
     As a user
-    So that I can keep track of my tasks
+    So that I can keep track of my tasks (show_todolist) - DONE
     I want to keep a todo list along with my diary < todo list
 
     As a user
-    So that I can keep track of my contacts
+    So that I can keep track of my contacts - DONE
     I want to see a list of all of the mobile phone numbers in all my diary entries < list of all mobile phone numbers in the diary entries... an object contacts showing in the diary entries which at the same time are in the main object
     // Empieza por + o por 00? Tiene X dígitos? Empieza por 020/07...? < esto depende de si empieza por + o por 00 > just UK - then +44
 
@@ -208,22 +208,17 @@ task02 = Task.new ("be alive on Friday")
 my_diary.tasklist = [task01, task02]
 my_diary.listphones = [00447451716528, +447651411529]
 
-
-
-# Gets all tracks
-library = MusicLibrary.new
-track_1 = Track.new("Carte Blanche", "Veracocha")
-track_2 = Track.new("Synaesthesia", "The Thrillseekers")
-library.add(track_1)
-library.add(track_2)
-library.all # => [track_1, track_2]
-
 4. Create Examples as Unit Tests
 Create examples, where appropriate, of the behaviour of each relevant class at a more granular level of detail.
 
 # EXAMPLE
 
-# Constructs a track
+# Creates a DiaryEntry
+diary_entry01 = DiaryEntry.new("10/08/2022 - Example2 first", "This is another example again thank you also I called 00447570226528")
+diary_entry01.title eq "10/08/2022 - Example2 first"
+diary_entry02.contents eq "This is another example again thank you also I called 00447570226528"
+
+
 track = Track.new("Carte Blanche", "Veracocha")
 track.title # => "Carte Blanche"
 Encode each example as a test. You can add to the above list as you go.
