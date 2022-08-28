@@ -1,17 +1,15 @@
 class DiaryTask
 
     def initialize(task)
-        @task = {
-            "task" => task,
-            "completed" => false
-        }
+        @task = task
+        @completed = false
     end
 
     def completed_task
-        @task["completed"] = true
+        @completed = true
     end
 
-    attr_reader :task
+    attr_reader :task, :completed
 
 end
 

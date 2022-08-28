@@ -172,8 +172,8 @@ RSpec.describe "Class Diary and all the interactions with other classes" do
         diary_challenge.add_task("Make food for the week")
         it "#When calling the list with entries added before" do  
             expect(diary_challenge.list_all_tasks).to eq diary_challenge.tasklist
-            expect(diary_challenge.list_all_tasks[0].task["task"]).to eq "End the lesson before Friday"
-            expect(diary_challenge.list_all_tasks[3].task["task"]).to eq "Make food for the week"
+            expect(diary_challenge.list_all_tasks[0].task).to eq "End the lesson before Friday"
+            expect(diary_challenge.list_all_tasks[3].task).to eq "Make food for the week"
         end      
     end
 

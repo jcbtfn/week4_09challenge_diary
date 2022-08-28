@@ -76,26 +76,16 @@ class Diary
         end
         @tasklist.each_index do |i| 
             puts "Task " + (i + 1).to_s + 
-            if @tasklist[i].task["completed"]
+            if @tasklist[i].completed
                 " [completed]"
             else
                 " [incompleted]"
             end +
-            ": " + @tasklist[i].task["task"]
+            ": " + @tasklist[i].task
         end
         puts "**************"
         return @tasklist
     end
-
-# def completed (tasknum = nil, task = "")
-#     if ((@list[tasknum.to_i - 1] != nil) && tasknum != nil)
-#         return @list.delete_at(tasknum.to_i)
-#     elsif @list.include?(task)
-#         return @list.delete(task)
-#     else
-#         return "No task/entry for this value/task, please check again."
-#     end
-# end
 
     def list_all_phone_numbers
         puts "\nList of phone numbers found in the Diary entries: "

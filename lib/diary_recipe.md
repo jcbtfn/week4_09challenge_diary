@@ -94,7 +94,7 @@ Consider diagramming out the classes and their relationships. Take care to focus
         │          initialize (3 arrays)           │
         │                add_entry                 │
         │                entry_list                │
-        │                find entry                │
+        │                find_entry                │
         │     find_best_entry_for_reading_time     │
         │                 add_task                 │
         │              list_all_tasks              │
@@ -159,7 +159,6 @@ class DiaryEntry
     def count_words (boolean which indicates if we modified the entry)
         return the number of words
     end
-
 end
 
 class PhoneNumberScanner
@@ -269,7 +268,7 @@ diary_challenge.find_best_entry_for_reading_time(5, 5) => nil
 # With entries
 diary_challenge.find_best_entry_for_reading_time(5, 1) => "Contents04 004473A7472627 +44738LL53447 0205538178870 17975777666"
 diary_challenge.find_best_entry_for_reading_time(5, 2) => "Contents02 I'm learning to code at Makers 02038178870 or 07975777666"
-diary_challenge.find_best_entry_for_reading_time(1, 1)) => nil
+diary_challenge.find_best_entry_for_reading_time(1, 1) => nil
 # Empty Diary
 diary_challenge.list_all_phone_numbers => []
 # With entries
