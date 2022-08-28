@@ -37,11 +37,10 @@ Put or write the user story here. Add any clarifying notes you might have.
     - Get the best entry based on time of the user (minutes the user has)
 
 
-    DIARY ENTRIES (3 arguments - title, content, date)
+    DIARY ENTRIES (2 arguments - title, content)
     - when we initialize them we take the value for the title 
     - we take the value for the content
     - we can make the count of words
-    - we can also add a date
     - another method to ID phone numbers - which looks for numbers starting with +44 or 0044 and 10/11 digits long
     phone_list{phone number => 00447498345983498
                 entry related to => title} << everytime I add a new entry we scan and add the telephone number to the list
@@ -89,96 +88,102 @@ Consider diagramming out the classes and their relationships. Take care to focus
                         │         completed?          │
                         └─────────────────────────────┘
 
+        ┌──────────────────────────────────────────┐
+        │                  DIARY                   │
+        │                                          │
+        │          initialize (3 arrays)           │
+        │                add_entry                 │
+        │                entry_list                │
+        │                find entry                │
+        │     find_best_entry_for_reading_time     │
+        │                 add_task                 │
+        │              list_all_tasks              │
+        │          list_all_phone_numbers          │
+        │                                          │
+        └─┬───────────────────┬──────────────────┬─┘
+          │                   │                  │
+  ┌───────▼───────┐ ┌─────────▼──────────┐ ┌─────▼──────────┐
+  │  DiaryEntry   │ │ PhoneNumberScanner │ │   DiaryTask    │
+  │               │ │                    │ │                │
+  │  initialize   │ │     initialize     │ │   initialize   │
+  │  count_words  │ │   add_phone_num    │ │ completed_task │
+  │  attr_reader  │ │ scan_phone_numbers │ │  attr_reader   │
+  │               │ │     attr_reader    │ │                │
+  │               │ │                    │ │                │
+  └───────────────┘ └────────────────────┘ └────────────────┘
+
 Also design the interface of each class in more detail.
 
 class Diary
     def initialize
         @diaryentries = []
-        @phonelist_complete = []
-        @tasklist_complete = []
+        @full_phone_list = []
+        @tasklist = []
     end
 
-    def add (entry < diaryentry object)
-        diaryentries << entry
-        phonelist_complete = phonelist_complete.concat(entry.scan_phone_numbers)
+    def add_entry (entry < diaryentry object)
     end
 
-    def list_entries 
-        return diaryentries
+    def entry_list 
+        return list of diary entries
     end
 
-    def show_entry (indexnumber = nil, title = "")
-        if indexnumber != nil
-            return diaryentries[indexnumber]
-        elsif 
-            diaryentries.each do |entry|
-                if entry.title == title
-                    return entry.contents
-                end
-            end
-        end
-        return diaryentries
+    def find_entry (takes two args, number  for index and string for title search)
+        return entry to find
     end
 
-    def suggest_entry(wpm, minutes)
+    def find_best_entry_for_reading_time(wpm, minutes)
+        returns the best entry for the arguments provided
     end
 
-    def tasklist
-        return tasklist_complete
+    def add_task
+        add a task to the list
     end
 
-    def list_phones
-        return phonelist_complete
+    def list_all_tasks
+        return a list of all the tasks
+    end
+
+    def list_all_numbers
+        return a list of phone numbers from the entries
     end
 end
 
 class DiaryEntry
-    def initialize
-        entryhash = {}
-        phonelist_entry = []
+    def initialize (takes the content and title)
+        @title = title
+        @contents = contents
+        @totalwords = 0
     end
 
-    def add (title, contents)
-        entryhash["title"] => title
-        entryhash["contents"] => contents
-        entryhash["num_of_words"] = contents.split.count
+    def count_words (boolean which indicates if we modified the entry)
+        return the number of words
     end
 
-    def title
-        return entryhash["title"]
+end
+
+class PhoneNumberScanner
+
+    def initialize (takes the text and the keyworkd o statement we associate it to)
+        @contents = text
+        @association = association
+        @phone_list = []
     end
 
-    def contents
-        return entryhash["contents"]
+    def add_phone_num(takes the phone)
+        formats the telephone number
+        links it to the associated word/statement
+        add it to the list
     end
 
     def scan_phone_numbers
-        entryhash.contents.split.each do |string|
-            if ((string[0..3] == "0044" && string.length == 10 then) || (string[0..3] = "+44" && string.length == 11))
-                new_contact = {"telephone_number" => string, "entry_related" => entryhash["title"]}
-                phonelist << new_contact
-            end
+        adds phone numbers found to a list
             return phonelist
         end
     end
 end    
 
-Class TaskList
-    def initialize 
-        @list_of_tasks = []
-    end
-
-    def add(task)
-        @list_of_tasks << task
-    end
-
-    def list_all_tasks
-        return @list_of_tasks
-    end
-end
-
-
-Class Task
+Class DiaryTask
     def initialize (task)
         task = {"task" => task, "completed" => false}
     end
@@ -193,20 +198,37 @@ Create examples of the classes being used together in different situations and c
 
 # EXAMPLE
 
-# Create a Diary
-my_diary = Diary.new
-entry_1 = DiaryEntry.new("18/08/2022 - first", "This is my first entry 00447451716528")
-entry_2 = DiaryEntry.new("19/08/2022 - second", "This is another entry which is the second and +447651411529 I don't know what else to write")
-my_diary.add(entry_1)
-my_diary.add(entry_2)
-my_diary.list_entries eq to [entry_1, entry_2]
-my_diary.show_entry(1, nil) eq entry_2
-my_diary.show_entry(nil, "18/08/2022 - first") eq entry 1
-my_diary.suggest_entry (5, 1) eq to entry_1
-task01 = Task.new ("finish lesson 09")
-task02 = Task.new ("be alive on Friday")
-my_diary.tasklist = [task01, task02]
-my_diary.listphones = [00447451716528, +447651411529]
+# Create a Diary and test with no entries
+    diary = Diary.new
+    diary.diaryentries => []
+    diary.entrylist => Error no entries on the list
+
+# Create entries and test it
+    entry1 = DiaryEntry.new(title1, content1)
+    entry1.title = title1
+    entry1.contents = content1
+    entry1.count_words = x
+    same with the different entries we would like to test
+
+# Add the entries to the Diary
+    We take the same entries as before
+    diary.add_entry(entry1, 2, 3...) => entry1, 2, 3...
+
+# Test find entry in empty Diary
+    diary = Diary.new
+    diary_challenge.find_entry => returns error (empty)
+
+# Test find entry after adding some entries
+    diary = Diary.new
+    entry = DiaryEntry.new
+    diary.add_entryy(entry1, 2, 3)
+
+# Test method to find entry for a reading time with empty Diary
+    diary = Diary.new
+    diary.find_entry => returns error (empty)
+
+# Test method to find entry with entries
+    Same as before, we create the Diary and entries
 
 4. Create Examples as Unit Tests
 Create examples, where appropriate, of the behaviour of each relevant class at a more granular level of detail.
@@ -214,14 +236,59 @@ Create examples, where appropriate, of the behaviour of each relevant class at a
 # EXAMPLE
 
 # Creates a DiaryEntry
-diary_entry01 = DiaryEntry.new("10/08/2022 - Example2 first", "This is another example again thank you also I called 00447570226528")
-diary_entry01.title eq "10/08/2022 - Example2 first"
-diary_entry02.contents eq "This is another example again thank you also I called 00447570226528"
+diary_challenge = Diary.new
+expect(diary_challenge.diary_entries).to eq ([])
+diary_challenge.entry_list => "There are no entries in the Diary"
+entry_01 = DiaryEntry.new("Title01", "Contents01 llamé a 00447387472627 y luego a +447383453447")
+entry_01.title => "Title01"
+entry_01.contents => "Contents01 llamé a 00447387472627 y luego a +447383453447"
+entry_01.count_words => 8
+entry_02 = DiaryEntry.new("Title02", "Contents02 I'm learning to code at Makers 02038178870 or 07975777666")
+entry_02.title => "Title02"
+entry_02.contents => "Contents02 I'm learning to code at Makers 02038178870 or 07975777666"
+entry_02.count_words => 10
+entry_03 = DiaryEntry.new("Title03", "Contents03 I'm adding an entry without any phone number.")
+entry_03.title => "Title03"
+entry_03.contents => "Contents03 I'm adding an entry without any phone number."
+entry_03.count_words => 9
+entry_04 = DiaryEntry.new("Title04", "Contents04 004473A7472627 +44738LL53447 0205538178870 17975777666")
+entry_04.title => "Title04"
+entry_04.contents => "Contents04 004473A7472627 +44738LL53447 0205538178870 17975777666"
+entry_04.count_words => 5
+diary_challenge.diary_entries => [entry_01, entry_02, entry_03, entry_04]
+# With empty Diary
+diary_challenge.find_entry(0, nil) => nil
+# With entries
+diary_challenge.find_entry(2, nil) => "Contents02 I'm learning to code at Makers 02038178870 or 07975777666"
+diary_challenge.find_entry(nil, "Title03") => "Contents03 I'm adding an entry without any phone number."
+diary_challenge.find_entry(33, nil) => nil
+diary_challenge.find_entry(nil, "Trittle02") => nil
+diary_challenge.find_entry(nil, nil) => nil
+# Empty Diary
+diary_challenge.find_best_entry_for_reading_time(5, 5) => nil
+# With entries
+diary_challenge.find_best_entry_for_reading_time(5, 1) => "Contents04 004473A7472627 +44738LL53447 0205538178870 17975777666"
+diary_challenge.find_best_entry_for_reading_time(5, 2) => "Contents02 I'm learning to code at Makers 02038178870 or 07975777666"
+diary_challenge.find_best_entry_for_reading_time(1, 1)) => nil
+# Empty Diary
+diary_challenge.list_all_phone_numbers => []
+# With entries
+diary_challenge.list_all_phone_numbers).to eq ([{"phone_number"=>"+447387472627", "associated_to"=>"Title01"}, {"phone_number"=>"+447383453447", "associated_to"=>"Title01"}, {"phone_number"=>"+442038178870", "associated_to"=>"Title02"}, {"phone_number"=>"+447975777666", "associated_to"=>"Title02"}, {"phone_number"=>"+441623432115", "associated_to"=>"Title05"}, {"phone_number"=>"+441992132112", "associated_to"=>"Title05"}])
+# No entries
+diary_challenge.list_all_tasks => []
+diary_challenge.add_task("") => nil
+diary_challenge.list_all_tasks => []
+# With entries
+diary_challenge.add_task("Sleep 8 hours")
+diary_challenge.list_all_tasks => diary_challenge.tasklist
+diary_challenge.add_task("End the lesson before Friday")
+diary_challenge.add_task("Finish code for lesson 09")
+diary_challenge.add_task("Read and finish paperwork from the employer")
+diary_challenge.add_task("Make food for the week")
+diary_challenge.list_all_tasks => diary_challenge.tasklist
+diary_challenge.list_all_tasks[0].task["task"] => "End the lesson before Friday"
+diary_challenge.list_all_tasks[3].task["task"] => "Make food for the week"
 
-
-track = Track.new("Carte Blanche", "Veracocha")
-track.title # => "Carte Blanche"
-Encode each example as a test. You can add to the above list as you go.
 
 5. Implement the Behaviour
 After each test you write, follow the test-driving process of red, green, refactor to implement the behaviour.

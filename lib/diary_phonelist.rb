@@ -2,14 +2,14 @@ class PhoneNumberScanner
 
     def initialize(text, association)
         @contents = text
-        @title = association
+        @association = association
         @phone_list = []
     end
 
     def add_phone_num(string)
         @phone_list << {
             "phone_number" => ("+44" + string[-10..-1]), 
-            "associated_to" => @title
+            "associated_to" => @association
         }
     end
 

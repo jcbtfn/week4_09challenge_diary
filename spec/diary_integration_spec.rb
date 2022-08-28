@@ -5,7 +5,7 @@ require "diary_task"
 
 RSpec.describe "Class Diary and all the interactions with other classes" do
 
-    context "Create the Diary" do
+    context "When Diary is created and there are no entries" do
         it "#Initialize the Diary, main object on top of the hierarchy" do
             diary_challenge = Diary.new
             expect(diary_challenge).to be_a Diary
@@ -13,7 +13,7 @@ RSpec.describe "Class Diary and all the interactions with other classes" do
         end 
         it "#Call the list of entries in the Diary when is empty" do
             diary_challenge = Diary.new
-            diary_challenge.entry_list
+            expect{diary_challenge.entry_list}.to raise_error ("There are no entries in the Diary")
         end
     end
 
@@ -80,7 +80,7 @@ RSpec.describe "Class Diary and all the interactions with other classes" do
         diary_challenge.add_entry(DiaryEntry.new("Title03", "Contents03 I'm adding an entry without any phone number."))
         diary_challenge.add_entry(DiaryEntry.new("Title04", "Contents04 004473A7472627 +44738LL53447 0205538178870 17975777666"))
         it "#Retrieve an entry given a number for index or the title of the entry" do
-            expect(diary_challenge.find_entry(1, nil)).to eq "Contents02 I'm learning to code at Makers 02038178870 or 07975777666"
+            expect(diary_challenge.find_entry(2, nil)).to eq "Contents02 I'm learning to code at Makers 02038178870 or 07975777666"
             expect(diary_challenge.find_entry(nil, "Title03")).to eq "Contents03 I'm adding an entry without any phone number."
         end 
         it "#Returns nil and error message if there is no entry or arguments are wrong" do
@@ -151,14 +151,14 @@ RSpec.describe "Class Diary and all the interactions with other classes" do
         end
 
         it "#When trying to add an empty task" do
-            expect(diary_challenge.new_task("")).to eq nil
+            expect(diary_challenge.add_task("")).to eq nil
             expect(diary_challenge.list_all_tasks).to eq []
         end        
     end
 
     context "Test DiaryTask Class interaction with the main Diary Class - one entry" do
         diary_challenge = Diary.new
-        diary_challenge.new_task("Sleep 8 hours")
+        diary_challenge.add_task("Sleep 8 hours")
         it "#When calling the list with entries added before" do  
             expect(diary_challenge.list_all_tasks).to eq diary_challenge.tasklist
         end      
@@ -166,12 +166,14 @@ RSpec.describe "Class Diary and all the interactions with other classes" do
 
     context "Test DiaryTask Class interaction with the main Diary Class" do
         diary_challenge = Diary.new
-        diary_challenge.new_task("End the lesson before Friday")
-        diary_challenge.new_task("Finish code for lesson 09")
-        diary_challenge.new_task("Read and finish paperwork from the employer")
-        diary_challenge.new_task("Make food for the week")
+        diary_challenge.add_task("End the lesson before Friday")
+        diary_challenge.add_task("Finish code for lesson 09")
+        diary_challenge.add_task("Read and finish paperwork from the employer")
+        diary_challenge.add_task("Make food for the week")
         it "#When calling the list with entries added before" do  
             expect(diary_challenge.list_all_tasks).to eq diary_challenge.tasklist
+            expect(diary_challenge.list_all_tasks[0].task["task"]).to eq "End the lesson before Friday"
+            expect(diary_challenge.list_all_tasks[3].task["task"]).to eq "Make food for the week"
         end      
     end
 

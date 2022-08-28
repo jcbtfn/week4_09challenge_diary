@@ -1,28 +1,21 @@
 class Diary
 
     def initialize
-        @diary_entries = []
-        @full_phone_list = []
-        @tasklist = []
+        @diary_entries, @full_phone_list, @tasklist = [], [], []
     end
 
     def add_entry (entry)
-        entry.count_words
+        entry.count_words #First run this method to have the number of words
         @diary_entries << entry
-        extractphone = PhoneNumberScanner.new(entry.contents, entry.title)
-        @full_phone_list.concat(extractphone.scan_phone_numbers)
+        @full_phone_list.concat(PhoneNumberScanner.new(entry.contents, entry.title).scan_phone_numbers)
     end
 
     def entry_list
+        fail "There are no entries in the Diary" unless (@diary_entries != [])
         puts "\nList of entries stored in the Diary: "
         puts "**************"
-        if @diary_entries != []
-            @diary_entries.each_index do |i| 
-                puts "[" + i.to_s + "] " + @diary_entries[i].title + (": ") + 
-                @diary_entries[i].contents[0..25] + "..."
-            end
-        else
-            puts "There are no entries in the Diary"
+        @diary_entries.each_index do |i| 
+            puts "[" + (1+i).to_s + "] " + @diary_entries[i].title + (": ") + @diary_entries[i].contents[0..25] + "..."
         end
         puts "**************"
         puts "End of entries"
@@ -30,12 +23,12 @@ class Diary
 
     def find_entry (index = nil, title = nil)
         if (index == nil && title != nil)
-            index = @diary_entries.bsearch_index {|index| index.title == title}
+            index = (@diary_entries.bsearch_index {|index| index.title == title})
+            if index != nil then index += 1 end
         end
         if ((index != nil) && (@diary_entries[index.to_i] != nil))
-            puts "\n[Located diary entry " + (index+1).to_s + "]: " + 
-            @diary_entries[index].title +
-            "\n" + @diary_entries[index].contents
+            index -= 1
+            puts "\n[Located diary entry " + (index+1).to_s + "]: " + @diary_entries[index].title + "\n" + @diary_entries[index].contents
             return @diary_entries[index].contents
         else
             puts "\n[!] No task/entry for this value/task, please input the value again."
@@ -66,7 +59,7 @@ class Diary
         puts "**************"
     end
 
-    def new_task(task)
+    def add_task(task)
         if [nil, "", " "].include?(task) #(task != nil && task != "" && task != " ")
             puts "Can't add an empty task."
             return nil

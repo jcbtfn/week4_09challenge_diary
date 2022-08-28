@@ -8,7 +8,7 @@ class DiaryTask
     end
 
     def completed_task
-        @task["completed"] => true
+        @task["completed"] = true
     end
 
     attr_reader :task
