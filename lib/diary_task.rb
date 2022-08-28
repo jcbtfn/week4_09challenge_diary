@@ -12,5 +12,3 @@ class DiaryTask
     attr_reader :task, :completed
 
 end
-
-
